@@ -1,0 +1,35 @@
+version: "3.7"
+services:
+  apache:
+    build:
+      context: apache2
+    environment:
+      - MYSQL_HOST
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - APACHE_RUN_USER=webserver
+      - APACHE_RUN_GROUP=webserver
+    networks:
+      - lamp
+    ports:
+      - 80:8080
+    volumes:
+      - type: bind
+        source: ./apache2/html
+        target: /var/www/html
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - lamp
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+
+networks:
+  lamp:
+volumes:
+  mysql-data:
